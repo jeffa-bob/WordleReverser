@@ -8,31 +8,77 @@
     <title>Wordle-Reverser</title>
   </head>
 
-  <script></script>
-
   <body>
-    <div class=" items-center w-screen h-screen bg-slate-800 align-center">
-        <div class="container mx-auto p-8 content-center">
-            <div class="grid place-items-center h-fit">
-                
-                <label for="Result" class="block mb-2 text-lg inline-block font-medium text-gray-900 dark:text-gray-300">Paste Wordle Result</label>
-                <textarea id="Result" placeholder="Wordle 437 5/6&#10;&#10;⬜⬜⬜⬜🟩&#10;⬜🟨⬜⬜🟩&#10;🟨⬜🟨⬜🟩&#10;⬜🟩⬜🟨🟩&#10;🟩🟩🟩🟩🟩" rows="4" class="block p-5 w-50 h-80 text-lg text-center resize-none text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></textarea>
-            </div>
+    <script src="word-list.js"></script>
+    <script>
+      var colorcode = ["bg-stone-500", "bg-amber-500", "bg-green-500"];
+      function parseWordle() {
+        let regex = /Wordle (\d+) (\d)\/6/su;
+        let string = document.getElementById("Result").value;
+        if (!regex.test(string)) {
+          console.log("fail");
+          return;
+        }
+        let result = string.match(regex);
+        console.log(result);
+        let num = result[1];
+        let count = result[2];
+        if (num === undefined && count === undefined) {
+          console.log("fail");
+          return;
+        }
+        let final = answerlist[num];
+        console.log(final);
+        addWord(final, [2, 2, 2, 2, 2]);
+      }
+    </script>
+    <div class="items-center w-screen h-screen bg-slate-800 align-center">
+      <div class="container mx-auto p-8 content-center">
+        <div class="grid place-items-center h-fit">
+          <label
+            for="Result"
+            class="mb-2 text-lg inline-block font-medium text-gray-900 dark:text-gray-300"
+            >Paste Wordle Result</label
+          >
+          <textarea
+            id="Result"
+            placeholder="Wordle 437 5/6&#10;&#10;⬜⬜⬜⬜🟩&#10;⬜🟨⬜⬜🟩&#10;🟨⬜🟨⬜🟩&#10;⬜🟩⬜🟨🟩&#10;🟩🟩🟩🟩🟩"
+            rows="4"
+            class="block p-5 w-60 h-80 text-lg text-center resize-none text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          ></textarea>
+          <button
+            type="button"
+            class="w-60 m-2 px-5 py-2.5 inline-block focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+            onclick="parseWordle()"
+          >
+            Go
+          </button>
         </div>
-        <div class="container mx-auto p-8 content-center">
-            <div class="grid place-items-center h-fit">
-                <div class="grid grid-cols-5 gap-4">
-                <div class="w-10 h-10 block rounded-sm border">5</div>
-                <div class="w-10 h-10 block rounded-sm border">5</div>
-                <div class="w-10 h-10 block rounded-sm border">5</div>
-                <div class="w-10 h-10 block rounded-sm border">5</div>
-                <div class="w-10 h-10 block rounded-sm border">5</div>
-                <div class="w-10 h-10 block rounded-sm border">5</div>
-                <div class="w-10 h-10 block rounded-sm border">5</div>
-            </div>
+      </div>
+      <div class="container mx-auto p-8 content-center">
+        <div class="grid place-items-center h-fit">
+          <div id="word-grid" class="grid grid-cols-5 gap-2"></div>
         </div>
-        </div>
-        <div>
+      </div>
     </div>
+    <div></div>
+    <script>
+      function addWord(word, color) {
+        if (word.length !== 5) {
+          throw "Word Length wrong";
+        }
+        word = word.toUpperCase();
+        let grid = document.getElementById("word-grid");
+        [...word].forEach((char, index) => {
+          let div = document.createElement("div");
+          div.className = `w-10 h-10 block rounded-lg  border leading-9 font-bold align-middle text-center text-neutral-200 ${
+            colorcode[color[index]]
+          }`;
+          div.innerText = char;
+          grid.appendChild(div);
+        });
+      }
+      addWord("jeffy", [0, 0, 0, 1, 0]);
+    </script>
   </body>
 </html>
